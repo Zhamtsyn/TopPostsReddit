@@ -14,8 +14,46 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var topPostsAdapter: TopPostsAdapter
+    private val viewModel: TopPostsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        viewModel.getTopPosts()
+        initRecyclerView()
+
+        viewModel.vm.observe(this, { response->
+            when(response){
+                is Resource.Success->{
+                    response.data.let{posts->
+                        if (posts!=null){
+                            topPostsAdapter.differ.submitList(posts.data.children)
+                        }
+                    }
+                }
+                is Resource.Error ->{
+                    response.message?.let{
+                        Log.e("TAG", "An error occurred: $it")
+                    }
+                }
+                is Resource.Loading->{
+
+                }
+            }
+        })
+
+
+    }
+
+    private fun initRecyclerView() {
+        binding.rvPosts.layoutManager =
+            LinearLayoutManager(this@MainActivity, RecyclerView.VERTICAL, false)
+        topPostsAdapter = TopPostsAdapter()
+        binding.rvPosts.adapter = topPostsAdapter
+
     }
 }
