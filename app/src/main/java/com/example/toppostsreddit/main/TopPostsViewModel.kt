@@ -1,4 +1,4 @@
-package com.example.toppostsreddit
+package com.example.toppostsreddit.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

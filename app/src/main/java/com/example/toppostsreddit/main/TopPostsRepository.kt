@@ -1,4 +1,4 @@
-package com.example.toppostsreddit
+package com.example.toppostsreddit.main
 
 import com.example.toppostsreddit.data.TopPostsApi
 import javax.inject.Inject

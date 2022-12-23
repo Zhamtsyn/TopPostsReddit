@@ -6,8 +6,8 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.toppostsreddit.TopPostsAdapter
-import com.example.toppostsreddit.TopPostsViewModel
+import com.example.toppostsreddit.main.TopPostsAdapter
+import com.example.toppostsreddit.main.TopPostsViewModel
 import com.example.toppostsreddit.databinding.ActivityMainBinding
 import com.example.toppostsreddit.util.Resource
 import dagger.hilt.android.AndroidEntryPoint

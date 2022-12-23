@@ -1,6 +1,6 @@
 package com.example.toppostsreddit.di
 
-import com.example.toppostsreddit.TopPostsRepository
+import com.example.toppostsreddit.main.TopPostsRepository
 import com.example.toppostsreddit.data.TopPostsApi
 import dagger.Module
 import dagger.Provides
