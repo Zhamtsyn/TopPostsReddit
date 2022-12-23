@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface TopPostsApi {
 
-    @GET
-    fun getTopPosts(): Response<TopPosts>
+    @GET("top.json")
+    suspend fun getTopPosts(): Response<TopPosts>
 }
