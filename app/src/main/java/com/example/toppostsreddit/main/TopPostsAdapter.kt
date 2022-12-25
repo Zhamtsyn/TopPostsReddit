@@ -3,7 +3,7 @@ package com.example.toppostsreddit.main
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -47,21 +47,26 @@ class TopPostsAdapter(
     }
 
     override fun onBindViewHolder(holder: TopPostsViewHolder, position: Int) {
-        val post = dataList[position]
-        holder.bind(post)
+        holder.setIsRecyclable(false)
+        val post = getItem(position)
+        if (post != null) {
+            holder.bind(post)
+        }
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
 
-    private val differCallback = object : DiffUtil.ItemCallback<Children>() {
-        override fun areItemsTheSame(oldItem: Children, newItem: Children): Boolean {
-            return oldItem == newItem
-        }
+    companion object {
+        val differCallback = object : DiffUtil.ItemCallback<Children>() {
+            override fun areItemsTheSame(oldItem: Children, newItem: Children): Boolean {
+                return oldItem == newItem
+            }
 
-        override fun areContentsTheSame(oldItem: Children, newItem: Children): Boolean {
-            return oldItem == newItem
+            override fun areContentsTheSame(oldItem: Children, newItem: Children): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }
