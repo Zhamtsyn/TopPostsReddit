@@ -23,7 +23,7 @@ class TopPostsAdapter(
             val time = getHours(post.data.created_utc.toLong(), "HH")
             with(binding) {
                 tvAuthor.text = post.data.author
-                tvComments.text = "Comments:${post.data.num_comments}"
+                tvComments.text = "Comments: ${post.data.num_comments}"
                 tvText.text = post.data.title
                 tvHoursAgo.text = "$time hours ago"
                 if (post.data.thumbnail == "default") {
