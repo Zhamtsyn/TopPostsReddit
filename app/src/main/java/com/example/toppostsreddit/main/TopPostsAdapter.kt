@@ -10,8 +10,11 @@ import com.bumptech.glide.Glide
 import com.example.toppostsreddit.data.models.Children
 import com.example.toppostsreddit.databinding.ItemPostBinding
 
-class TopPostsAdapter : RecyclerView.Adapter<TopPostsAdapter.TopPostsViewHolder>() {
-    class TopPostsViewHolder(private val binding: ItemPostBinding) :
+class TopPostsAdapter(
+    private val onClickListener: (String) -> Unit,
+    private val onTextViewClickListener: (String) -> Unit
+) : PagingDataAdapter<Children, TopPostsAdapter.TopPostsViewHolder>(differCallback) {
+    inner class TopPostsViewHolder(private val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Children) {
             with(binding) {
@@ -20,9 +23,17 @@ class TopPostsAdapter : RecyclerView.Adapter<TopPostsAdapter.TopPostsViewHolder>
                 tvText.text = post.data.title
                 if (post.data.thumbnail == "default") {
                     iv.isVisible = false
+                    tvSave.isVisible = false
                 } else {
-                    iv.isVisible=true
+                    iv.isVisible = true
+                    tvSave.isVisible = true
                     Glide.with(root).load(post.data.thumbnail).into(iv)
+                }
+                iv.setOnClickListener {
+                    onClickListener.invoke(post.data.url)
+                }
+                tvSave.setOnClickListener {
+                    onTextViewClickListener.invoke(post.data.url)
                 }
             }
         }
@@ -53,12 +64,4 @@ class TopPostsAdapter : RecyclerView.Adapter<TopPostsAdapter.TopPostsViewHolder>
             return oldItem == newItem
         }
     }
-
-    val differ = AsyncListDiffer(this, differCallback)
-
-    var dataList: List<Children>
-        get() = differ.currentList
-        set(value) {
-            differ.submitList(value)
-        }
 }
