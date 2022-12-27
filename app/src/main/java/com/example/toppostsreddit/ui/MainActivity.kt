@@ -62,11 +62,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadingData() {
-        val coroutineScope = CoroutineScope(Dispatchers.Main)
-        coroutineScope.launch {
-            viewModel.listData.collect { pagingData ->
-                topPostsAdapter.submitData(pagingData)
-            }
+        viewModel.topPosts.observe(this@MainActivity) { response->
+
+            topPostsAdapter.differ.submitList(response.data)
         }
     }
 

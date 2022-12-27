@@ -1,11 +1,7 @@
 package com.example.toppostsreddit.main
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
-import com.example.toppostsreddit.paging.TopPostsPagingSource
+import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -13,15 +9,5 @@ import javax.inject.Inject
 class TopPostsViewModel @Inject constructor(private val topPostsRepository: TopPostsRepository) :
     ViewModel() {
 
-    val listData = Pager(
-        PagingConfig(
-            pageSize = 10,
-            enablePlaceholders = false,
-            prefetchDistance = 1,
-            initialLoadSize = 10
-        )
-    ) {
-        TopPostsPagingSource(topPostsRepository)
-    }.flow.cachedIn(viewModelScope)
-
+    val topPosts = topPostsRepository.getTopPosts().asLiveData()
 }

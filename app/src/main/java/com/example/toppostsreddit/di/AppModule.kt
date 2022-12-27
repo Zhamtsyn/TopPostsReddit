@@ -1,7 +1,9 @@
 package com.example.toppostsreddit.di
 
-import com.example.toppostsreddit.main.TopPostsRepository
+import android.app.Application
+import androidx.room.Room
 import com.example.toppostsreddit.data.TopPostsApi
+import com.example.toppostsreddit.data.database.PostsDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,8 +22,9 @@ object AppModule {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(TopPostsApi::class.java)
-
     @Singleton
     @Provides
-    fun provideConverterRepository(api:TopPostsApi): TopPostsRepository = TopPostsRepository(api)
+    fun provideDatabase(app:Application):PostsDatabase=
+        Room.databaseBuilder(app, PostsDatabase::class.java, "posts_database")
+            .fallbackToDestructiveMigration().build()
 }
