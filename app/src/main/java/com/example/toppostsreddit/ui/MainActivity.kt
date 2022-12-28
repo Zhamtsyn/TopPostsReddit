@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.*
 import java.util.*
 
@@ -89,29 +90,43 @@ class MainActivity : AppCompatActivity() {
 
             val coroutineScope = CoroutineScope(Dispatchers.IO)
             coroutineScope.launch {
-                val `in` = java.net.URL(url).openStream()
-                val bitmap = BitmapFactory.decodeStream(`in`)
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
+                try {
+                    val `in` = java.net.URL(url).openStream()
+                    val bitmap = BitmapFactory.decodeStream(`in`)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
 
-                outStream.flush()
-                outStream.close()
-                val scanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-                val contentUri = Uri.fromFile(outFile)
-                scanIntent.data = contentUri
-                sendBroadcast(scanIntent)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            applicationContext, "Image downloaded successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    outStream.flush()
+                    outStream.close()
+
+                    val scanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+                    val contentUri = Uri.fromFile(outFile)
+                    scanIntent.data = contentUri
+                    sendBroadcast(scanIntent)
+
+                } catch (e: Throwable) {
+                    withContext(Dispatchers.Main){
+                        onError(e)
+                    }
+                }
             }
-            Toast.makeText(
-                applicationContext,
-                "Image downloaded successfully",
-                Toast.LENGTH_SHORT
-            ).show()
-        } catch (e: FileNotFoundException) {
-            print("FNF")
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
+
+        } catch (e: Throwable) {
+            onError(e)
         }
+
+    }
+
+    private fun onError(e:Throwable){
+        Toast.makeText(
+            applicationContext, "Something went wrong...", Toast.LENGTH_SHORT).show()
+        e.printStackTrace()
     }
 
     private fun handleOnImageClick(url: String) {
